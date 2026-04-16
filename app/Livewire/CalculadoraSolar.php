@@ -28,7 +28,7 @@ class CalculadoraSolar extends Component
         rule: ['required', 'string', 'regex:/^\(?\d{2}\)?[\s-]?9?\d{4}[\s-]?\d{4}$/'],
         message: [
             'telefone.required' => 'Informe seu WhatsApp.',
-            'telefone.regex' => 'WhatsApp inválido. Ex: (68) 99252-3198 ou 68992523198.',
+            'telefone.regex' => 'WhatsApp inválido. Ex: (68) 99258-2319 ou 68992582319.',
         ],
     )]
     public string $telefone = '';

@@ -27,7 +27,7 @@ it('cria lead e mostra resultado com dados válidos', function () {
     Livewire::test(CalculadoraSolar::class)
         ->set('nome', 'Lucas Estevo')
         ->set('email', 'lucas@estevo.tech')
-        ->set('telefone', '68992523198')
+        ->set('telefone', '68992582319')
         ->set('consumoKwh', 300)
         ->set('consentimentoLgpd', true)
         ->call('calcular')
@@ -43,7 +43,7 @@ it('cria lead e mostra resultado com dados válidos', function () {
     $lead = Lead::first();
     expect($lead->nome)->toBe('Lucas Estevo')
         ->and($lead->email)->toBe('lucas@estevo.tech')
-        ->and($lead->telefone)->toBe('68992523198')
+        ->and($lead->telefone)->toBe('68992582319')
         ->and($lead->consumo_kwh)->toBe(300)
         ->and($lead->num_placas)->toBe(6)
         ->and((float) $lead->potencia_kwp)->toEqualWithDelta(2.78, 0.01)
@@ -72,7 +72,7 @@ it('exige consentimento LGPD marcado', function () {
 });
 
 it('aceita telefone com e sem máscara', function () {
-    foreach (['68992523198', '(68) 99252-3198', '68 99252-3198', '6899252319'] as $tel) {
+    foreach (['68992582319', '(68) 99258-2319', '68 99258-2319', '6899258231'] as $tel) {
         Livewire::test(CalculadoraSolar::class)
             ->set('telefone', $tel)
             ->call('calcular')

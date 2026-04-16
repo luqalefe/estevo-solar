@@ -1,6 +1,6 @@
 <x-layouts.app :title="'Estevo Tech — Sites e CRM para empresas de energia solar'">
     @php
-        $whatsapp = config('solar.empresa.whatsapp', '5568992523198');
+        $whatsapp = config('solar.empresa.whatsapp', '5568992582319');
         $msgComercial = 'Olá! Tenho interesse no site institucional + CRM da Estevo Tech para minha empresa de energia solar.';
         $waUrl = 'https://wa.me/'.$whatsapp.'?text='.urlencode($msgComercial);
     @endphp
