@@ -31,7 +31,7 @@ echo "🌱 Garantindo admin (seeder idempotente)..."
 php artisan db:seed --force
 
 echo "🔗 Storage link..."
-php artisan storage:link 2>/dev/null || true
+[ -L "$APP_DIR/public/storage" ] || php artisan storage:link
 
 echo "⚡ Cache de produção..."
 php artisan optimize:clear
