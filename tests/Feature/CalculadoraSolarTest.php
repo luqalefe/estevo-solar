@@ -10,8 +10,15 @@ use Livewire\Livewire;
 
 uses(RefreshDatabase::class);
 
-it('landing page renderiza o componente CalculadoraSolar', function () {
+it('landing / renderiza pitch institucional da Estevo Tech', function () {
     $this->get('/')
+        ->assertOk()
+        ->assertSee('Estevo Tech', false)
+        ->assertSee('energia solar', false);
+});
+
+it('rota /demo renderiza a calculadora Livewire', function () {
+    $this->get('/demo')
         ->assertOk()
         ->assertSeeLivewire(CalculadoraSolar::class);
 });

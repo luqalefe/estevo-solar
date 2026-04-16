@@ -3,4 +3,5 @@
 use App\Livewire\CalculadoraSolar;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', CalculadoraSolar::class);
+Route::view('/', 'pitch')->name('pitch');
+Route::get('/demo', CalculadoraSolar::class)->name('demo');
