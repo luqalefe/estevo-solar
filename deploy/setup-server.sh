@@ -125,13 +125,17 @@ echo "🔐 Permissões..."
 chown -R www-data:www-data "$APP_DIR"
 chmod -R 775 "$APP_DIR/storage" "$APP_DIR/bootstrap/cache"
 
-# ----- 8. Nginx vhost -----
+# ----- 8. Nginx vhost (copiado do arquivo versionado) -----
 VHOST="/etc/nginx/sites-available/${DOMAIN}"
+VHOST_SRC="${APP_DIR}/deploy/nginx/${DOMAIN}.conf"
 if [ ! -f "$VHOST" ]; then
-    echo "🌐 Criando Nginx vhost..."
+    echo "🌐 Criando Nginx vhost (HTTP-only até Certbot rodar)..."
+    # Vhost inicial só em porta 80. Depois do Certbot, o arquivo correto com
+    # HTTPS vem de deploy/nginx/${DOMAIN}.conf
     cat > "$VHOST" <<NGINX
 server {
     listen 80;
+    listen [::]:80;
     server_name ${DOMAIN};
     root ${APP_DIR}/public;
     index index.php index.html;
@@ -139,39 +143,14 @@ server {
     charset utf-8;
     client_max_body_size 20M;
 
-    gzip on;
-    gzip_comp_level 5;
-    gzip_min_length 256;
-    gzip_types text/plain text/css application/json application/javascript text/xml application/xml image/svg+xml font/woff2;
-
-    add_header X-Frame-Options "SAMEORIGIN";
-    add_header X-Content-Type-Options "nosniff";
-
     location / {
         try_files \$uri \$uri/ /index.php?\$query_string;
     }
-
-    location = /favicon.ico { access_log off; log_not_found off; }
-    location = /robots.txt  { access_log off; log_not_found off; }
-
-    location ~* \.(css|js|woff2?|ttf)$ {
-        expires 1y;
-        add_header Cache-Control "public, immutable";
-        access_log off;
-    }
-    location ~* \.(jpg|jpeg|png|gif|ico|webp|svg)$ {
-        expires 30d;
-        access_log off;
-    }
-
-    error_page 404 /index.php;
 
     location ~ \.php\$ {
         fastcgi_pass unix:/var/run/php/php${PHP_VERSION}-fpm.sock;
         fastcgi_param SCRIPT_FILENAME \$realpath_root\$fastcgi_script_name;
         include fastcgi_params;
-        fastcgi_hide_header X-Powered-By;
-        fastcgi_read_timeout 60;
     }
 
     location ~ /\.(?!well-known).* { deny all; }
@@ -179,7 +158,13 @@ server {
 NGINX
     ln -sf "$VHOST" "/etc/nginx/sites-enabled/${DOMAIN}"
     nginx -t && systemctl reload nginx
-    echo "  ✅ Nginx reload ok"
+    echo "  ✅ Vhost HTTP criado — rode 'certbot --nginx -d ${DOMAIN}' e depois copie $VHOST_SRC pra ativar a config final"
+elif [ -f "$VHOST_SRC" ]; then
+    echo "🌐 Atualizando vhost a partir de $VHOST_SRC..."
+    cp "$VHOST_SRC" "$VHOST"
+    ln -sf "$VHOST" "/etc/nginx/sites-enabled/${DOMAIN}"
+    nginx -t && systemctl reload nginx
+    echo "  ✅ Vhost atualizado"
 else
     echo "✓ Vhost já existe"
 fi
