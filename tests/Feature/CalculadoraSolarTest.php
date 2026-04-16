@@ -71,8 +71,18 @@ it('exige consentimento LGPD marcado', function () {
     expect(Lead::count())->toBe(0);
 });
 
-it('aceita telefone com e sem máscara', function () {
-    foreach (['68992582319', '(68) 99258-2319', '68 99258-2319', '6899258231'] as $tel) {
+it('aceita telefone em formatos nacionais e internacionais', function () {
+    $formatos = [
+        '68992582319',       // cru BR
+        '(68) 99258-2319',   // máscara BR
+        '68 99258-2319',     // espaço + máscara
+        '6899258231',        // DDD + 8 dígitos (fixo)
+        '5568992582319',     // com DDI sem +
+        '+5568992582319',    // E.164
+        '+55 68 99258-2319', // E.164 espaçado
+    ];
+
+    foreach ($formatos as $tel) {
         Livewire::test(CalculadoraSolar::class)
             ->set('telefone', $tel)
             ->call('calcular')

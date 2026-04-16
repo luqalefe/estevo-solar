@@ -25,10 +25,10 @@ class CalculadoraSolar extends Component
     public string $email = '';
 
     #[Validate(
-        rule: ['required', 'string', 'regex:/^\(?\d{2}\)?[\s-]?9?\d{4}[\s-]?\d{4}$/'],
+        rule: ['required', 'string', 'regex:/^(?:\+?55)?\s?\(?\d{2}\)?[\s-]?9?\d{4}[\s-]?\d{4}$/'],
         message: [
             'telefone.required' => 'Informe seu WhatsApp.',
-            'telefone.regex' => 'WhatsApp inválido. Ex: (68) 99258-2319 ou 68992582319.',
+            'telefone.regex' => 'WhatsApp inválido. Ex: (68) 99258-2319, 68992582319 ou +5568992582319.',
         ],
     )]
     public string $telefone = '';
@@ -78,7 +78,7 @@ class CalculadoraSolar extends Component
         $this->validate([
             'nome' => 'required|string|min:2|max:100',
             'email' => 'required|email|max:255',
-            'telefone' => ['required', 'string', 'regex:/^\(?\d{2}\)?[\s-]?9?\d{4}[\s-]?\d{4}$/'],
+            'telefone' => ['required', 'string', 'regex:/^(?:\+?55)?\s?\(?\d{2}\)?[\s-]?9?\d{4}[\s-]?\d{4}$/'],
             'consumoKwh' => 'required|integer|min:50|max:10000',
             'consentimentoLgpd' => 'accepted',
         ]);
